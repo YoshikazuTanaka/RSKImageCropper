@@ -150,6 +150,11 @@ typedef NS_ENUM(NSUInteger, RSKImageCropMode) {
  */
 @property (assign, getter=isRotationEnabled, nonatomic) BOOL rotationEnabled;
 
+/**
+ A Boolean value that controls whether the status bar can be hidden. Default value is `YES`.
+ */
+@property (assign, nonatomic) BOOL statusBarHiddenEnabled ;
+
 /// -------------------------------
 /// @name Accessing the UI Elements
 /// -------------------------------

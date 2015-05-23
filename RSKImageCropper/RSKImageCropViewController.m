@@ -79,6 +79,7 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
         _avoidEmptySpaceAroundImage = NO;
         _applyMaskToCroppedImage = NO;
         _rotationEnabled = NO;
+        _statusBarHiddenEnabled = YES ;
         _cropMode = RSKImageCropModeCircle;
     }
     return self;
@@ -133,14 +134,16 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 {
     [super viewWillAppear:animated];
     
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        self.originalStatusBarHidden = application.statusBarHidden;
-        [application setStatusBarHidden:YES];
+    if (_statusBarHiddenEnabled == YES) {
+        UIApplication *application = [UIApplication rsk_sharedApplication];
+        if (application) {
+            self.originalStatusBarHidden = application.statusBarHidden;
+            [application setStatusBarHidden:YES];
+        }
+        
+        self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
+        [self.navigationController setNavigationBarHidden:YES animated:NO];
     }
-    
-    self.originalNavigationControllerNavigationBarHidden = self.navigationController.navigationBarHidden;
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -154,14 +157,16 @@ static const CGFloat kLayoutImageScrollViewAnimationDuration = 0.25;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
-    UIApplication *application = [UIApplication rsk_sharedApplication];
-    if (application) {
-        [application setStatusBarHidden:self.originalStatusBarHidden];
+
+    if (_statusBarHiddenEnabled == YES) {
+        UIApplication *application = [UIApplication rsk_sharedApplication];
+        if (application) {
+            [application setStatusBarHidden:self.originalStatusBarHidden];
+        }
+        
+        [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
+        self.navigationController.view.backgroundColor = self.originalNavigationControllerViewBackgroundColor;
     }
-    
-    [self.navigationController setNavigationBarHidden:self.originalNavigationControllerNavigationBarHidden animated:animated];
-    self.navigationController.view.backgroundColor = self.originalNavigationControllerViewBackgroundColor;
 }
 
 - (void)viewWillLayoutSubviews
